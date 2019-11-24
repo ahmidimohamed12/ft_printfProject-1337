@@ -1,7 +1,7 @@
 #include "ft_printf.h"
 
 
-int ft_strlen(int a)
+int ft_strlen(char *a)
 {
     int i;
     i = 0;

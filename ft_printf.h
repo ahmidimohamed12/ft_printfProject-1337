@@ -6,6 +6,8 @@
 #include <stddef.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <limits.h>
+
 
 
 typedef struct s_list
@@ -27,5 +29,6 @@ void    ft_putchar(char c);
 void    ft_putnbr(int c);
 void    ft_putnbr_fd(int c,int fd);
 void    ft_putstr(char *s);
-t_list  start(t_list list);
+t_list  *start(t_list *list);
+int     convert(t_list *list);
 #endif
