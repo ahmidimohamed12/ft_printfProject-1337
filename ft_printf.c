@@ -1,5 +1,7 @@
 #include "ft_printf.h"
+#include <stdarg.h>
 #include <ctype.h>
+
 
 t_list  *display_int (t_list *l)
 {
@@ -43,18 +45,39 @@ int    convert(t_list   *list)
     return (list->i);
 }
 
+
+int count(t_list *ls)
+{
+    while (ls->cpy != '\0')
+    {
+        ft_putchar(ls->cpy[ls->i]);
+        if ( ls->cpy[ls->i] == 'd' && ls->cpy[ls->i] == 'D')
+            ls->len++;
+        ls->i++;
+    }
+    //ft_putstr(ls->cpy);
+    return (ls->len);
+}
+
 int ft_printf(const char *c,...)
 {
     t_list *list;
-   
-   return (list->len);
+    va_list  ls;
+    int r;
+    list->format = c;
+    va_start(ls,c);
+    printf("%d",count(list));
+    va_end(ls);
+    return (0);
 }
 
 int main()
 {
     int a;
-    int r =  ft_printf("kkjdjfjkdjf\n");
-    a = printf("kkjdjfjkdjf\n");
+    t_list *ls;
+    ls->format = "ahmidi";
+    start(ls);
+    a = count(ls);
     printf("%d",a);
     return (0);
 }
