@@ -17,15 +17,20 @@ int	check(const char *s1)
 	return (0);
 }
 
-int count(t_list *ls)
+int	convert(t_list *ls)
 {
-	if (check(ls->cpy) == 0)
+	if (check(ls->cpy) == 1)
 		return (0);
 	while (ls->cpy[ls->i] != '\0')
     	{
-        	if (ls->cpy[ls->i] == 'd' || ls->cpy[ls->i] == 'i' )
+        	if (ls->cpy[ls->i] == '%')
             	{
+				
 			
+		}
+		else
+		{
+			write(1,&ls->cpy[ls->i],1);
 			ls->len++;
 		}
         	ls->i++;
@@ -37,20 +42,19 @@ int ft_printf(const char *c,...)
 {
 	t_list *ls;
 	int rr;
-	va_list ap;
 	if(!(ls =(t_list *) malloc(sizeof(t_list))))
 		return (-1);
 	ls->format = c;
-	va_start(ap,c);
-	if (ap)
+	ls = init(ls);
+	if (c)
 	{
-		init(ls);
+		va_start(ls->arguments,c);
 		if ((rr = check(c)) == 0)
 			ft_putstr((char *)c);
 		else
 			//start();
+		va_end(ls->arguments);
 	}
-	va_end(ap);
 	return (rr);
 }
 

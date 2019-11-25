@@ -18,7 +18,7 @@ typedef struct s_list
     char        *flags;//flags +- #0
     int         len; 
     int         i;
-    va_list     args;
+    va_list     arguments;
     char        *cpy;
     int id;
 }   t_list;
