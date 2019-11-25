@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-t_list  *start(t_list *list)
+t_list  *init(t_list *list)
 {
     list->len = 0;
     list->flags = "+- #0";

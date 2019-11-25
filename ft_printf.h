@@ -7,8 +7,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <limits.h>
-
-
+#include <sys/uio.h>
 
 typedef struct s_list
 {
@@ -25,10 +24,11 @@ typedef struct s_list
 }   t_list;
 
 
+int	ft_strcmp(const char *s1,const char *s2);
 void    ft_putchar(char c);
 void    ft_putnbr(int c);
 void    ft_putnbr_fd(int c,int fd);
 void    ft_putstr(char *s);
-t_list  *start(t_list *list);
+t_list  *init(t_list *list);
 int     convert(t_list *list);
 #endif

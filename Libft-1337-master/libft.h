@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/uio.h>
+#include <stdio.h>
 
 typedef struct s_list
 {
@@ -52,4 +53,5 @@ char				*ft_strnew(int n);
 void				ft_bzero(void *d, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
 char 				*ft_strcpy(char *dest, const char *src);
+int				ft_strcmp(const char *s1, const char *s2);
 #endif
