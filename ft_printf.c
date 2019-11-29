@@ -2,49 +2,97 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <limits.h>
 
-int	check(const char *s1, const char *s2)
+
+int		getnum(t_var *ls)
+{
+	intmax_t	num;
+	if (ls->specifierCurrent == 'd' || ls->specifierCurrent == 'i')
+		num  = (int) va_arg(ls->arguments,int);		
+	return (num);
+}
+
+char	get_char(t_var *ls)
+{
+	int	car;
+	if (ls->specifierCurrent == 'c')
+		car  =  va_arg(ls->arguments,int);
+	return (car);
+}
+
+char	*get_string(t_var *ls)
+{
+	char	*chaine;
+	if (ls->specifierCurrent == 's')
+		chaine = (char *) va_arg(ls->arguments,char *);
+	
+	return (chaine);
+}
+
+t_var	*display(t_var *ls)
+{
+	int a = getnum(ls);
+	if (ls->specifierCurrent == 'd' || ls->specifierCurrent == 'i')
+		ft_putnbr_fd(a,1);
+	if (ls->specifierCurrent == 'c')
+		ft_putchar_fd(get_char(ls) ,1);
+	if (ls->specifierCurrent == 's')
+		ft_putstr_fd(get_string(ls),1);
+	return (ls);
+}
+
+t_var	*speci(t_var *ls)
+{
+	int	i;
+	if (ls->nbflags == 1)
+		ls->i++;
+	i = 0;
+	while (ls->specifier[i] != '\0')
+	{
+		if (ls->cpy[ls->i] == ls->specifier[i])
+			ls->specifierCurrent = ls->specifier[i];
+		i++;	
+	}
+	//printf("\n this specifier\n:%c",ls->specifierCurrent);
+	return (ls);
+}
+
+t_var	*testflag(t_var *ls)
 {
 	int i;
 
 	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned int)s1[i] - (unsigned int)s2[i] );
-}
-
-t_list	*speci(t_list *ls)
-{
-	while (ls->cpy[ls->i] != '\0')
-	{
-		if (ls->cpy[ls->i] == ls->specifier[ls->i])
-			printf("%s",ls->cpy);
-
-	}
+		while (ls->flags[i] != '\0')
+		{
+			if (ls->cpy[ls->i] == ls->flags[i])
+			{
+				ls->cnv[i] = ls->flags[i];
+				ls->nbflags = 1;
+			}
+			i++;
+		}
 	return (ls);
 }
 
 
-int	treat(t_list *ls)
-{
-	ls->i++;
-	printf ("nomber i treat %d\n",ls->i);\
-	ls  = convert_flags(ls);
-	speci(ls);
-	return (ls->len);
-}
 
 
-int	convert(t_list *ls)
+
+
+int	convert(t_var *ls)
 {
-	if (check(ls->cpy,"%") == 0)
+	if (ft_strcmp((char *)ls->cpy,"%") == 0)
 		return (0);
 	while (ls->cpy[ls->i] != '\0')
     	{
 		if (ls->cpy[ls->i] == '%')
 		{
-			//end();	
-			treat(ls);
+
+			ls->i++;
+			testflag(ls);
+			speci(ls);
+			display(ls);
 		}
 		else
 		{
@@ -53,14 +101,13 @@ int	convert(t_list *ls)
 		}
     		ls->i++;
 	}
-	printf("%d",ls->len);
 	return (ls->len);
 }
 
 int ft_printf(const char *c,...)
 {
-	t_list *ls;
-	if(!(ls =(t_list *) malloc(sizeof(t_list))))
+	t_var *ls;
+	if(!(ls =(t_var *) malloc(sizeof(t_var))))
 		return (-1);
 	ls->format = c;
 	ls = init(ls);
@@ -75,7 +122,7 @@ int ft_printf(const char *c,...)
 
 int main()
 {
-	int r = 3;
-	int a = ft_printf("ahmidi%dmohamed\n");
+	int r = ft_printf("ahmidi%xmoha%dmed",-);
+
 	return (0);
 }

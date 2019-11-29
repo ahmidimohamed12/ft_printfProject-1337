@@ -1,13 +1,6 @@
 #include "ft_printf.h"
 
-int ft_strlen(char *a)
-{
-    int i;
-    i = 0;
-    while (a[i] != '\0')
-        i++;
-    return (i);
-}
+
 
 int	ft_strcmp(const char *s1,const char *s2)
 {
