@@ -14,10 +14,12 @@
 typedef struct s_var
 {
     const char  *format;
+    char        width;
     char        *specifier;// les chaine de formatage
     char        *prec;//presision 
     char        *flags;//flags -0.*
     int         len;
+    char         *nbwidth;
     char	specifierCurrent; 
     int         i;
     int     nbflags;

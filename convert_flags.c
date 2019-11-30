@@ -15,20 +15,3 @@ t_var	*convert_flags(t_var *ls)
 	printf("%d",i);
 	return (ls);
 }
-
-
-intmax_t 	getnum(t_var  *ls)
-{
-	intmax_t	num;
-	num = (int) va_arg(ls->arguments,int);
-	return (num);
-}
-
-
-
-t_var		*display(t_var *ls)
-{
-	int a = getnum(ls);
-	ft_putnbr_fd(a,1);
-	return (ls);
-}
