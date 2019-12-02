@@ -4,6 +4,24 @@
 #include <stdlib.h>
 #include <limits.h>
 
+
+
+t_var	*parse_precision(t_var *ls)
+{
+	while (ls->cpy[tab->i] == '.')
+	{
+		ls->i++;
+		ls->precision = 0;
+	}
+	while (ls->cpy[ls->i] >= '0' && ls->cpy[ls->i] <= '9')
+	{
+		ls->precision *= 10;
+		ls->precision += (ls->cpy[ls->i] - 48);
+		ls->i++;
+	}
+	return (ls);
+}
+
 t_var	*test_width(t_var *ls)
 {
 	if (ls->cpy[ls->i] == '.')
@@ -91,6 +109,7 @@ int		treat(t_var *ls)
 
 	parse_convert (ls);
 	test_width(ls);
+	parse_precision(ls);
 	speci(ls);
 	display(ls);
 	return (ls->len);

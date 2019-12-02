@@ -22,6 +22,7 @@ typedef struct s_var
     char         *nbwidth;
     char	specifierCurrent; 
     int     point;
+    int     precision;
     int         i;
     char    stars;
     int     isstars;
