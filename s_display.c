@@ -90,7 +90,7 @@ t_var			*display_d(t_var *tab)
 	num = get_num(tab);
 	if (num == 0 && tab->precision == 0)
 	{
-		if (tab->cnv[1] == '+')
+		if (tab->cnv[1] == '+s')
 			display_wchar('+', tab);
 		if (tab->cnv[2] == ' ')
 			display_wchar(' ', tab);
