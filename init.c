@@ -7,7 +7,9 @@ t_var   *init(t_var *list)
     list->specifier = "cspdiuxX%";
     list->nbflags = 0;
     list->point = 0;
+    list->stars = 0;
     list->i = 0;
+    list->precision = -1;
     list->cpy = (char *)list->format;
     list->action = (char *) list->format;
     return (list);

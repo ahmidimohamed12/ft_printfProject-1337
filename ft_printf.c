@@ -8,12 +8,12 @@
 
 t_var	*parse_precision(t_var *ls)
 {
-	while (ls->cpy[tab->i] == '.')
+	while (ls->cpy[ls->i] == '.')
 	{
 		ls->i++;
 		ls->precision = 0;
 	}
-	while (ls->cpy[ls->i] >= '0' && ls->cpy[ls->i] <= '9')
+	while (ft_isdigit(ls->cpy[ls->i]))
 	{
 		ls->precision *= 10;
 		ls->precision += (ls->cpy[ls->i] - 48);
@@ -29,7 +29,7 @@ t_var	*test_width(t_var *ls)
 		ls->point = 1;
 		ls->i++;
 	}
-	if (isdigit(ls->cpy[ls->i]))
+	if (ft_isdigit(ls->cpy[ls->i]))
 	{
 		ls->width = (ls->cpy[ls->i] - 48);
 		ls->i++;
@@ -61,13 +61,15 @@ t_var		*parse_convert(t_var *ls)
 				ls->cnv[1] = '.';
 			while (ls->action[ls->i] == '0' && ls->i++)
 				ls->cnv[2] = '0';
-			while (ls->action[ls->i] == '#' && ls->i++)
+			while (ls->action[ls->i] == '*' && ls->i++)
 				ls->cnv[3] = '*';
 			i = 0;
 		}
-		//printf ("\n%c\n",ls->cnv[i]);
+		
 		i++;
+		ls->stars++;
 	}
+
 	return (ls);
 }
 t_var	*speci(t_var *ls)
@@ -103,12 +105,23 @@ t_var	*testflag(t_var *ls)
 	return (ls);
 }
 
+t_var	*widthparse(t_var *tab)
+{
+	while (ft_isdigit(tab->cpy[tab->i]))
+	{
+		tab->width *= 10;
+		tab->width += (tab->cpy[tab->i] - 48);
+		tab->i++;
+	}
+	return (tab);
+}
+
+
 int		treat(t_var *ls)
 {
 	ls->i++;
-
-	parse_convert (ls);
-	test_width(ls);
+	parse_convert(ls);
+	widthparse(ls);
 	parse_precision(ls);
 	speci(ls);
 	display(ls);
@@ -124,17 +137,18 @@ int		convert(t_var *ls)
     	{
 			if (ls->cpy[ls->i] == '%')
 			{
-				//ls->i++;
+				end(ls);
 				treat(ls);
+				
 			}
 			else
 			{
 				write(1,&ls->cpy[ls->i],1);
 				ls->len++;
-			}
-    		ls->i++;
+			}    	
+			ls->i++;
 		}
-	return (ls->len);
+	return (ls->len + ls->stars);
 }
 
 int ft_printf(const char *c,...)
@@ -155,6 +169,11 @@ int ft_printf(const char *c,...)
 
 int main()
 {
-	int r = ft_printf("ahmidi%0.5dmohamed",5);
+	//int a = ft_printf("jkdjddskld%dsfkjfkf",5);
+//	int b = printf("jkdjddskld%dsfkjfkf",5);
+	//printf ("\n%d\n%d",a,b);
+	int r = ft_printf("ahmidi%50.2dmohamed",'d');
+	int d = printf("\nahmidi%50.2dmohamed",'d');
+	printf("\n[%i] \\ cuur [%i]",r,d);
 	return (0);
 }
