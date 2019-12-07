@@ -7,7 +7,6 @@ t_var   *init(t_var *list)
     list->specifier = "cspdiuxX%";
     list->nbflags = 0;
     list->point = 0;
-    list->stars = 0;
     list->i = 0;
     list->precision = -1;
     list->cpy = (char *)list->format;
@@ -21,5 +20,6 @@ t_var   *end(t_var *ls)
     ls->cnv[1] = '\0';
     ls->cnv[2] = '\0';
     ls->cnv[3] = '\0';
+    ls->cnv[4] = '\0';
     return (ls);
 }

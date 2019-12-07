@@ -1,59 +1,7 @@
 #include "ft_printf.h"
 #include <stddef.h>
-void	ft_putnstr(int n)
-{
-	int  i;
 
-	 i = 0;
-	 while (i < n)
-	 {
-		 ft_putchar_fd(' ',1);
-		 i++;
-	 }
-}
-intmax_t		getnum(t_var *ls)
-{
-	intmax_t	num;
-	if (ls->specifierCurrent == 'd' || ls->specifierCurrent == 'i')
-	{
-		num  = (int) va_arg(ls->arguments,int);
-	}
-	return (num);
-}
-
-char	get_char(t_var *ls)
-{
-	int	car;
-	
-	if (ls->specifierCurrent == 'c')
-		car  =  va_arg(ls->arguments,int);
-	return (car);
-}
-
-char	*get_string(t_var *ls)
-{
-	char	*chaine;
-	
-	if (ls->specifierCurrent == 's')
-		chaine = (char *) va_arg(ls->arguments,char *);
-	return (chaine);
-}
-
- char		get_negatvity_placeholder(t_var *tab, int is_negative)
-{
-	char	*tmp;
-
-	tmp = tab->cnv;
-	if (is_negative)
-		return ('-');
-	if (tmp[1] == '+')
-		return ('+');
-	if (tmp[2] == ' ')
-		return (' ');
-	return ('\0');
-}
-
- void display_gap(t_var *ls, char c ,int len , int update)
+void display_gap(t_var *ls, char c ,int len , int update)
 {
 	char *str;
 
@@ -69,41 +17,73 @@ char	*get_string(t_var *ls)
 	}
 }
 
-
-t_var	*print(t_var *tab, intmax_t num, int num_width, int align_left)
+intmax_t	get_num(t_var *tab)
 {
-	int		notvide;
+	intmax_t	num;
+	num = (int) va_arg(tab->arguments,int);
+	num = (intmax_t)num;
+	return (num);
+}
+char		get_negatvity_placeholder(t_var *tab, int is_negative)
+{
+	char	*tmp;
+
+	tmp = tab->cnv;
+	if (is_negative)
+		return ('-');
+	return ('\0');
+}
+static int		get_tens(intmax_t num)
+{
+	int tens;
+
+	if (num < 0)
+		num *= -1;
+	tens = 1;
+	while ((num /= 10) > 0)
+		tens++;
+	return (tens);
+}
+
+
+
+ t_var	*print(t_var *tab, intmax_t num, int num_width, int align_left)
+{
+	int			not_blank;
 	char		negatvity_placeholder;
 	int			is_negative;
+
 	is_negative = (num < 0) ? 1 : 0;
 	num *= (is_negative && num != (-9223372036854775807 - 1)) ? -1 : 1;
 	negatvity_placeholder = get_negatvity_placeholder(tab, is_negative);
-	notvide = num_width;
+	not_blank = num_width;
+	//printf ("\n===>%d\n",num_width);
 	if (num_width <= tab->precision && tab->precision >= 0)
-	 	notvide = tab->precision;
+		not_blank = tab->precision;
 	if (negatvity_placeholder)
-		notvide++;
-	 tab->len += (notvide <= tab->width) ? tab->width : notvide;
-	 printf("\nlength%d\n",tab->len);
+		not_blank++;
+	tab->len += (not_blank <= tab->width) ? tab->width : not_blank;
 	//if (!align_left)
-	//	display_gap(tab, ' ', tab->width - notvide, 0);
+	//	display_gap(tab, ' ', tab->width - not_blank, 0);
 	if (negatvity_placeholder)
 		write(1, &negatvity_placeholder, 1);
-	//print(tab, '0', tab->precision - num_width, 0);
+	display_gap(tab, '0', tab->precision , 0);
 	if (num != (-9223372036854775807 - 1))
 	{
-		//ft_putnbrmax_fd(num, 1);
+		tab->width = 0;
+		tab->cnv[0] = '\0';
 		ft_putnbr_fd(num,1);
+	//	printf("\nwidth==>%d\n",tab->width);
+		
+		//ft_putnbrmax_fd(num, 1);
+		
 	}
 	else if ((tab->len += 18) > 0)
 		write(1, "9223372036854775808", 19);
-	//if (align_left)
-	//	display_gap(tab, ' ', tab->width - notvide, 0);
-	//ft_putnbr_fd(num,1);
-
+	if (align_left)
+		display_gap(tab, ' ', tab->width - not_blank, 0);
 	return (tab);
- }
-
+}
 
 
 
@@ -111,56 +91,57 @@ t_var			*display_d(t_var *tab)
 {
 	intmax_t	num;
 	int			num_width;
+	int c;
 	int			align_left;
-	char neg;
-	char	*d;
-	int p;
+	int b;
 
-	p = 0;
-	align_left = 0;
-	num = getnum(tab);
-	neg = get_negatvity_placeholder(tab,align_left);
-	//num_width = get_tens(num);
-	//printf ("\nnum width is ==>%d\n",num_width);
-	align_left = (tab->cnv[0] == '-') ? 1 : 0;
-	//printf("\nhhhh%d\n",align_left);
-	p = (tab->cnv[2] == '0') ? 1 : 0;
-	d = ft_itoa(num);
-	neg = 	get_negatvity_placeholder(tab,align_left);
-	//printf("\ndjdfd===>%d\n",neg);
-	// if ( == '-')
-	// {
-	// 	//ft_putchar('-');
-	// 	display_gap(tab,'-',tab->width ,align_left);
-	// 	tab->cnv[0] = '\0';
-	// }
-	if (p == 1 || neg == '-')
-	{
-		display_gap(tab, '0', tab->width - 	ft_strlen(d), align_left);
-		tab->width = 0;
-	}
-	if (tab->width > 0 && p == 0)
-	{
-		display_gap(tab, ' ', tab->width - ft_strlen(d), align_left);
-		tab->width = 0;
-	}
+	b = 0;
+	num = get_num(tab);
+	char *k = ft_itoa((int)num);
 	
-	print(tab, num, tab->width, align_left);
+	if (num == 0 && tab->precision == 0)
+	{
+		display_gap(tab, ' ', tab->width, 1);
+		return (tab);
+	}
+	num_width = get_tens(num);
+	align_left = (tab->cnv[0] == '-') ? 1 : 0;
+
+	// if (tab->cnv[3] == '0' && tab->cnv[0] != '-')
+	// 	display_gap(tab, '0', tab->width - 1, 1);
+	// else if (tab->cnv[0] != '-')
+	// 	display_gap(tab, ' ', tab->width - 1, 1);
+	// //display_wchar(c, tab);
+	// if (tab->cnv[0] == '-')
+	// 	display_gap(tab, ' ', tab->width - 1, 1);
+
+	//printf("\n===%d===\n",tab->width);
+
+
+
+	if (tab->cnv[3] == '*' && tab->cnv[1] == '.')
+	{
+
+		//if (tab->cnv[2] == '0' && tab->width)
+		c = get_num(tab);
+		k = ft_itoa((int) c);
+		//printf("\n====%s====\n",k);
+		display_gap(tab,'0',num - ft_strlen(k),align_left);
+		print(tab,c,num_width,align_left);
+		b = 1;
+	}
+	if (tab->cnv[2] == '0' && tab->precision == -1 && !tab->cnv[0])
+	{
+		tab->precision = tab->width;
+		if (num < 0 || tab->cnv[2] || tab->cnv[1] || tab->cnv[0])
+			tab->precision--;
+	}
+	if (tab->width > 0)
+		display_gap(tab,' ',num - tab->width,align_left);
+	if (b == 0)
+		print(tab, num, num_width, align_left);
 	return (tab);
 }
-
-t_var	*display_c(t_var *tab)
-{
-	ft_putchar(get_char(tab));
-	return (tab);
-}
-
-t_var	*display_s(t_var *tab)
-{
-	ft_putstr_fd(get_string(tab),1);
-	return (tab);
-}
-
 t_var	*display(t_var *ls)
 {
 	//intmax_t a = getnum(ls);
@@ -171,12 +152,11 @@ t_var	*display(t_var *ls)
 	// ls->stars = '\0';
 	// ls->width = 0;
 	//printf ("\n%d\n",ls->precision);
-	if (ls->specifierCurrent == 'd' || ls->specifierCurrent == 'i' || ls->isstars == 1)
+	if (ls->specifierCurrent == 'd' || ls->specifierCurrent == 'i')
 		display_d(ls);
-	if (ls->specifierCurrent == 'c')
-		display_c(ls);
-	if (ls->specifierCurrent == 's')
-		display_s(ls);
+
+	//if (ls->specifierCurrent == 's')
+	//	display_s(ls);
 	//else
 	//	display_other(ls);
 	

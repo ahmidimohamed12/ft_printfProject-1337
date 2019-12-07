@@ -5,6 +5,13 @@
 #include <limits.h>
 
 
+int checkdi(t_var *tab)
+{
+	if(ft_isdigit(tab->cpy[tab->i]))
+		return (1);
+	return (0);
+}
+
 
 t_var	*parse_precision(t_var *ls)
 {
@@ -34,6 +41,7 @@ t_var	*test_width(t_var *ls)
 		ls->width = (ls->cpy[ls->i] - 48);
 		ls->i++;
 	}
+	
 	return (ls);
 }
 
@@ -67,9 +75,8 @@ t_var		*parse_convert(t_var *ls)
 		}
 		
 		i++;
-		ls->stars++;
 	}
-
+//	printf("===\n%c\n%c\n%c\n===",ls->cnv[1],ls->cnv[3],ls->cnv[2]);
 	return (ls);
 }
 t_var	*speci(t_var *ls)
@@ -83,8 +90,12 @@ t_var	*speci(t_var *ls)
 	{
 		if (ls->cpy[ls->i] == ls->specifier[i])
 			ls->specifierCurrent = ls->specifier[i];
+		//else
+		//	ls->i++;
+		
 		i++;	
 	}	
+	//printf ("\n==>%c\n",ls->specifierCurrent);
 	return (ls);
 }
 
@@ -113,13 +124,19 @@ t_var	*widthparse(t_var *tab)
 		tab->width += (tab->cpy[tab->i] - 48);
 		tab->i++;
 	}
+	printf("\n===>%d",tab->width);
 	return (tab);
 }
 
 
 int		treat(t_var *ls)
 {
+	// if (ls->cpy[ls->i] > '0' && ls->cpy[ls->i] <= '9')
+	// 	printf("jdfdfjdf");
+	// else
+	// {
 	ls->i++;
+	//}
 	parse_convert(ls);
 	widthparse(ls);
 	parse_precision(ls);
@@ -137,9 +154,8 @@ int		convert(t_var *ls)
     	{
 			if (ls->cpy[ls->i] == '%')
 			{
-				end(ls);
+				//end(ls);
 				treat(ls);
-				
 			}
 			else
 			{
@@ -148,7 +164,7 @@ int		convert(t_var *ls)
 			}    	
 			ls->i++;
 		}
-	return (ls->len + ls->stars);
+	return (ls->len);
 }
 
 int ft_printf(const char *c,...)
@@ -167,13 +183,16 @@ int ft_printf(const char *c,...)
 	return (ls->len);
 }
 
+
+
 int main()
 {
 	//int a = ft_printf("jkdjddskld%dsfkjfkf",5);
-//	int b = printf("jkdjddskld%dsfkjfkf",5);
+	//	int b = printf("jkdjddskld%dsfkjfkf",5);
 	//printf ("\n%d\n%d",a,b);
-	int r = ft_printf("ahmidi%50.2dmohamed",'d');
-	int d = printf("\nahmidi%50.2dmohamed",'d');
-	printf("\n[%i] \\ cuur [%i]",r,d);
+	int r = ft_printf("ahmidi%2dmohamed",5);
+	//printf("ahmidi%5dmohamed",5);
+	//int d = printf("ahmidi%0.*dmohamed",5,1);
+	//ft_printf ("\n[%i]\n==>[%i]\n",r,d);
 	return (0);
 }
